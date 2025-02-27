@@ -10,7 +10,16 @@ export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
-  const theme = useColorScheme() ?? 'light';
+
+  /*
+
+  On force le thème light ici pour avoir la même app partout
+  --- Décommenter pour avoir le thème de l'appareil ---
+  */
+
+  // const theme = useColorScheme() ?? 'light';
+  const theme = 'light';
+
   const colorFromProps = props[theme];
 
   if (colorFromProps) {
