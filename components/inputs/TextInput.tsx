@@ -9,9 +9,12 @@ interface CustomTextInputProps {
   disabled?: boolean,
   name: any;
   control: Control<any>;
-  bottomSheetInput?: boolean
+  bottomSheetInput?: boolean // If true, the input will be rendered as a BottomSheetTextInput (need to be true when using in a bottom sheet modal in order to prevent the input to be hidden by the keyboard)
 }
 
+/**
+ * Custom text input component
+ */
 export const CustomTextInput: FC<CustomTextInputProps> = ({
   placeholder,
   disabled,
@@ -20,9 +23,13 @@ export const CustomTextInput: FC<CustomTextInputProps> = ({
   bottomSheetInput,
 }) => {
 
+  // This state is used to change the border color when the input is focused
   const [isFocus, setIsFocus] = useState<boolean>(false)
+
+  // This state is used to change the border color when the input is wrong (logic to be implemented)
   const [isWrong, setIsWrong] = useState<boolean>(false)
 
+  // Accessing to the colors depending on the theme
   const fontColor = useThemeColor({}, "font")
   const fontGray = useThemeColor({}, "fontGray")
   const secondary = useThemeColor({}, "secondary")
@@ -30,6 +37,7 @@ export const CustomTextInput: FC<CustomTextInputProps> = ({
   const contrast = useThemeColor({}, "contrast")
   const error = useThemeColor({}, "error")
 
+  // Colors depending on the state of the input
   const backgroundColor = disabled ? secondary : fieldColor;
   const borderColor =
     disabled ? secondary
@@ -37,11 +45,12 @@ export const CustomTextInput: FC<CustomTextInputProps> = ({
     : isWrong ? error
     : secondary;
 
+  // Depending on the bottomSheetInput prop, the TextInput component will be changed
   const TextComponent = bottomSheetInput ? BottomSheetTextInput : TextInput
 
   return(
     <View style={[styles.container, { borderColor, backgroundColor }]}>
-      <Controller
+      <Controller // React Hook Form controller it order to avoid the reredering of the component at each typed letter in the input
         control={control}
         name={name}
         render={({ field: { onChange, value } }) => (

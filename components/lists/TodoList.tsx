@@ -10,6 +10,9 @@ interface TodoListRendererProps {
   handleCheckTodo: (id: string) => void,
 }
 
+/**
+ * Base component to render a list of todos
+ */
 export const TodoListRenderer: FC<TodoListRendererProps> = ({
   todoList,
   handleClickOnTodo,
@@ -18,7 +21,7 @@ export const TodoListRenderer: FC<TodoListRendererProps> = ({
 }) => {
 
   return(
-    <FlatList
+    <FlatList // FlatList is a component that renders a list of items optimally
       data={todoList}
       renderItem={({item: todo}) =>
         <TodoListItem
@@ -29,7 +32,7 @@ export const TodoListRenderer: FC<TodoListRendererProps> = ({
         />
       }
 
-      showsVerticalScrollIndicator={false}
+      showsVerticalScrollIndicator={false} // Hide the vertical scroll bar
       contentContainerStyle={{gap: 10}}
     />
   )

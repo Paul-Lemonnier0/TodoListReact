@@ -17,8 +17,11 @@ export function ThemedText({
   type = 'default',
   ...rest
 }: ThemedTextProps) {
+
+  // Gets the color from the theme (light or dark)
   const color = useThemeColor({ light: lightColor, dark: darkColor }, gray ? 'fontGray' : 'font');
 
+  //Definition of the text base styles
   return (
     <Text
       style={[

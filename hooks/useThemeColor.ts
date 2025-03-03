@@ -11,11 +11,8 @@ export function useThemeColor(
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
 
-  /*
-
-  On force le thème light ici pour avoir la même app partout
-  --- Décommenter pour avoir le thème de l'appareil ---
-  */
+  // We force the light theme here to have the same app across the three starters.
+  // --- Uncomment the next line to use the device's theme
 
   // const theme = useColorScheme() ?? 'light';
   const theme = 'light';

@@ -5,6 +5,7 @@ import Card from "../utils/Card"
 import { ThemedText } from "../ThemedText"
 import { CustomCheckbox } from "../buttons/Checkbox"
 
+// Define the props for the TodoListItem component
 interface TodoItemProps {
   todo: TodoItem,
   onPress: () => void,
@@ -12,6 +13,9 @@ interface TodoItemProps {
   isSelected?: boolean
 }
 
+/**
+ * Base component to render a single todo item
+ */
 export const TodoListItem: FC<TodoItemProps> = ({
   todo,
   onPress,
@@ -19,7 +23,7 @@ export const TodoListItem: FC<TodoItemProps> = ({
   onCheck
 }) => {
   return(
-    <Card
+    <Card //Custom component to render a card
       onPress={onPress}
       isSelected={isSelected}
     >

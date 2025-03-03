@@ -1,3 +1,6 @@
+/**
+ * Color definition of the application
+ */
 export const Colors = {
   light: {
     fontGray: "#808080",

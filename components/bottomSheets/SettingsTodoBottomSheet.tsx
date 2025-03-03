@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef } from "react";
+import { FC, useCallback, useEffect, useRef } from "react";
 import { BaseBottomSheet } from "./BaseBottomSheet";
 import { View } from "react-native";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -16,6 +16,9 @@ interface BasicTodoInfo {
   title: string
 }
 
+/**
+ * The bottom sheet to edit an existing todo item
+ */
 export const SettingsTodoBottomSheet: FC<SettingsTodoBottomSheetProps> = ({
   bottomSheetRef,
   todoTitle,
@@ -23,30 +26,35 @@ export const SettingsTodoBottomSheet: FC<SettingsTodoBottomSheetProps> = ({
   deleteTodoItem
 }) => {
 
-  const {
-    control,
-    handleSubmit,
-    setValue
-  } = useForm<BasicTodoInfo>({
+  // Form management with react-hook-form (we just need a title field)
+  const { control, handleSubmit, setValue } = useForm<BasicTodoInfo>({
     defaultValues: {
       title: todoTitle,
     },
   });
 
+  //Sets the form title value when the todo item title changes
   useEffect(() => {
     setValue("title", todoTitle);
   }, [todoTitle, setValue]);
 
+  const closeModal = useCallback(() => {
+    bottomSheetRef.current?.close()
+  }, [])
+
+  // Handle delete todo
   const handleDelete = () => {
     deleteTodoItem()
-    bottomSheetRef.current?.close()
+    closeModal()
   }
 
+  // Submittion management
   const onSubmit = (data: BasicTodoInfo) => {
     editTodoItem(data.title)
-    bottomSheetRef.current?.close()
+    closeModal()
   }
 
+  //UI Definition using the BaseBottomSheet component we defined earlier
   return(
     <BaseBottomSheet
       bottomSheetRef={bottomSheetRef}

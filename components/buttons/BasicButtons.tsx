@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { ThemedText } from "../ThemedText";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
+// Base button props, common for all buttons types
 interface BaseButtonProps {
   onPress: () => void,
   text?: string,
@@ -15,6 +16,9 @@ interface BaseButtonProps {
   flex?: boolean
 }
 
+/**
+ * Base button component that can be used to create different types of buttons
+ */
 const BaseButton: FC<BaseButtonProps> = ({
   onPress,
   text,
@@ -26,6 +30,7 @@ const BaseButton: FC<BaseButtonProps> = ({
   flex
 }) => {
 
+  //Accessing to the colors depending on the theme
   const font = useThemeColor({}, 'font')
   const fontGray = useThemeColor({}, 'fontGray')
   const contrast = useThemeColor({}, 'contrast')
@@ -34,21 +39,27 @@ const BaseButton: FC<BaseButtonProps> = ({
   const borderColor = disabled ? fontGray : contrast
 
   return(
-    <TouchableOpacity onPress={onPress} disabled={disabled} style={{flex: flex ? 1 : undefined}}>
+    // TouchableOpacity ~= button -> there is an opacity "confirmation" when pressed
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      style={{flex: flex ? 1 : undefined}}
+    >
       <View style={[
         styles.container,
         {
+          borderColor,
           borderWidth: hasBorder ? 2 : 0,
-          borderColor: borderColor,
           backgroundColor: backgroundColor ?? "transparent",
           justifyContent: iconName && text ? "space-between" : "center",
-
         }
       ]}>
         {
+          // Renders the text if it exists
           text && <ThemedText type="medium" style={{color: fontColor}}>{text}</ThemedText>
         }
         {
+          // Renders the icon if it exists
           iconName && <Ionicons name={iconName as any} size={24} color={fontColor} />
         }
       </View>
@@ -56,20 +67,19 @@ const BaseButton: FC<BaseButtonProps> = ({
   )
 }
 
-interface BackgroundTextButtonProps {
-  onPress: () => void,
-  iconName?: string
-  text: string,
-  backgroundColor?: string,
-  textColor?: string,
-  disabled?: boolean,
-  flex?: boolean
-}
+// Extends all the BaseButtonProps except the hasBorder prop
+interface BackgroundTextButtonProps extends Omit<BaseButtonProps, 'hasBorder'> {}
 
 const BackgroundTextButton: FC<BackgroundTextButtonProps> = ({
-  text, onPress, backgroundColor, textColor, iconName, flex
+  text,
+  onPress,
+  backgroundColor,
+  textColor,
+  iconName,
+  flex
 }) => {
 
+  //Accessing to the colors depending on the theme
   const baseBackgroundColor = useThemeColor({}, 'contrast')
   const baseTextColor = useThemeColor({}, "fontContrast")
 
@@ -85,6 +95,7 @@ const BackgroundTextButton: FC<BackgroundTextButtonProps> = ({
   )
 }
 
+// Base border icon button props
 interface BorderIconButtonProps {
   onPress: () => void,
   iconName: string,

@@ -1,8 +1,11 @@
 import React, { createContext, ReactNode, useState, useContext, useEffect } from "react";
 import TodoItem, { TodoList } from "@/app/types/TodoType";
 import TodoApiService from "@/utils/TodoServices";
-import * as Haptics from 'expo-haptics';
+import { BaseImpact } from "@/constants/Impacts";
 
+/**
+ * Defines the structure of the context type (what will be provided by the context)
+ */
 interface TodoListContextType {
   todoList: TodoList;
   addTodoItem: (title: string) => Promise<TodoItem>;
@@ -18,10 +21,20 @@ interface TodoListProviderProps {
   children: ReactNode;
 }
 
+/**
+ * Provides the TodoList context to child components.
+ * Handles CRUD operations for todo items using an API service.
+ *
+ * @param children - The child components that will have access to the context
+ * @returns - The TodoList context provider
+ */
 export const TodoListProvider: React.FC<TodoListProviderProps> = ({ children }) => {
   const [todoList, setTodoList] = useState<TodoList>([]);
   const todoApiServices = new TodoApiService();
 
+  /**
+   * Fetches the todo items from the API when the component mounts. Set the todolist state once it's done.
+   */
   useEffect(() => {
     const fetchTodoList = async () => {
       console.log("fetching todos...")
@@ -33,6 +46,12 @@ export const TodoListProvider: React.FC<TodoListProviderProps> = ({ children }) 
     fetchTodoList()
   }, [])
 
+  /**
+   * Creates a new todo item and adds it to the todo list.
+   * Persists the new item to the API.
+   * @param title - The title of the new todo item
+   * @returns
+   */
   const addTodoItem = async(title: string) => {
     const newItem: TodoItem = {
       id: Date.now().toString(),
@@ -48,27 +67,46 @@ export const TodoListProvider: React.FC<TodoListProviderProps> = ({ children }) 
     return newItem
   };
 
+  /**
+   * Removes a todo item from the todo list.
+   * Persists the deletion to the API.
+   * @param id - The id of the todo item to remove
+   */
   const removeTodoItem = async(id: string) => {
     setTodoList(todoList.filter((item) => item.id !== id));
     await todoApiServices.deleteItem(id)
   };
 
+  /**
+   * Toggles the isDone property of a todo item.
+   * Persists the change to the API.
+   * @param id - The id of the todo item to toggle
+   */
   const toggleTodoItem = async(id: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    BaseImpact()
 
+    // Retrieve the todo item from the list
     const todo = getTodoByID(id)
 
+    // Update the todo item state in the list
     setTodoList(
       todoList.map((item) =>
         item.id === id ? { ...item, isDone: !item.isDone } : item
       )
     );
 
+    // Persist the change to the API if the todo item exists
     if(todo) {
       await todoApiServices.updateItem({...todo, isDone: !todo?.isDone})
     }
   };
 
+  /**
+   * Updates the title of a todo item.
+   * Persists the change to the API.
+   * @param id - The id of the todo item to update
+   * @param title - The new title of the todo item
+   */
   const updateTodoItemTitle = async(id: string, title: string) => {
     setTodoList(
       todoList.map((item) =>
@@ -79,7 +117,12 @@ export const TodoListProvider: React.FC<TodoListProviderProps> = ({ children }) 
     await todoApiServices.updateItemTitle(id, title)
   };
 
-  const getTodoByID = (id: string) => {
+  /**
+   * Retrieves a todo item from the todo list by its id.
+   * @param id - The id of the todo item to retrieve
+   * @returns The todo item with the specified id
+   */
+  const getTodoByID = (id: string): TodoItem | undefined => {
     return todoList.find((item) => item.id === id)
   }
 
@@ -99,6 +142,10 @@ export const TodoListProvider: React.FC<TodoListProviderProps> = ({ children }) 
   );
 };
 
+/**
+ * Custom hook to access the TodoList context.
+ * Throws an error if used outside a TodoListProvider.
+ */
 export const useTodoList = (): TodoListContextType => {
   const context = useContext(TodoListContext);
   if (!context) {

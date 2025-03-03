@@ -1,3 +1,6 @@
+/**
+ * Base interface for defining the structure of a todo item
+ */
 export default interface TodoItem {
   title: string,
   isDone?: boolean,
@@ -5,4 +8,7 @@ export default interface TodoItem {
   id: string
 }
 
+/**
+ * Base type for defining the structure of a todo list
+ */
 export type TodoList = TodoItem[]

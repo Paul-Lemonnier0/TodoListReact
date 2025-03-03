@@ -8,9 +8,11 @@ import * as Haptics from 'expo-haptics';
 import { AddTodoBottomSheet } from "@/components/bottomSheets/AddTodoBottomSheet";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { SettingsTodoBottomSheet } from "@/components/bottomSheets/SettingsTodoBottomSheet";
+import { BaseImpact } from "@/constants/Impacts";
 
 export default function HomeScreen() {
 
+  // Get the methods and variables from the todolist context
   const {
     addTodoItem,
     updateTodoItemTitle,
@@ -18,10 +20,14 @@ export default function HomeScreen() {
     getTodoByID
   } = useTodoList()
 
+  // State to store the selected todo item ID
   const [selectedTodoID, setSelectedTodoID] = useState<string | null>(null)
+
+  // Refs for the bottom sheets
   const addTodoBottomSheetRef = useRef<BottomSheetModal>(null)
   const editTodoBottomSheetRef = useRef<BottomSheetModal>(null)
 
+  // Callbacks to open the bottom sheets (those will not be rerendered at each state change)
   const openAddTodoBottomSheet = useCallback(() => {
     addTodoBottomSheetRef.current?.present()
   }, [])
@@ -30,8 +36,9 @@ export default function HomeScreen() {
     editTodoBottomSheetRef.current?.present()
   }, [])
 
+  // Function to handle the selection of a todo item
   const handleSetSelectedTodoID = (id: string) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    BaseImpact()
 
     if(selectedTodoID === id) {
       setSelectedTodoID(null)
@@ -77,6 +84,7 @@ const HomeScreenHeader: FC<HomeScreenHeaderProps> = ({
     day: 'numeric'
   })
 
+  // Get the platform name (iOS or Android)
   const platform = Platform.OS === 'ios' ? 'iOS' : 'Android'
 
   return(
@@ -105,6 +113,8 @@ const HomeScreenContent: FC<HomeScreenContentProps> = ({
   selectedTodoID,
   setSelectedTodoID
 }) => {
+
+  // Get the todo list and the method from the context to toggle a todo item
   const {
     todoList,
     toggleTodoItem
@@ -134,7 +144,6 @@ const HomeScreenFooter: FC<HomeScreenFooterProps> = ({
       <BackgroundTextButton
         onPress={handleOpenAddTodo}
         text="Ajouter"
-        // iconName={"arrow-up-outline"}
       />
     </View>
   )

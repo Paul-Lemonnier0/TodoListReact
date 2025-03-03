@@ -1,6 +1,6 @@
 import { useThemeColor } from "@/hooks/useThemeColor"
 import { FC } from "react"
-import { TouchableOpacity, View } from "react-native"
+import { StyleSheet, TouchableOpacity, View } from "react-native"
 
 interface CardProps {
   isSelected?: boolean,
@@ -8,12 +8,16 @@ interface CardProps {
   children: React.ReactNode
 }
 
+/**
+ * Base card component to render a selectable card
+ */
 const Card: FC<CardProps> = ({
   onPress,
   isSelected,
   children
 }) => {
 
+  // Get the theme colors
   const secondary = useThemeColor({}, 'secondary')
   const field = useThemeColor({}, 'field')
   const contrast = useThemeColor({}, 'contrast')
@@ -21,20 +25,28 @@ const Card: FC<CardProps> = ({
   return(
     <TouchableOpacity onPress={onPress} disabled={!onPress}>
       <View
-        style={{
-          borderWidth: 2,
-          borderRadius: 20,
-          borderColor: isSelected ? contrast : secondary,
-          backgroundColor: field,
-          paddingHorizontal: 20,
-          paddingVertical: 30,
-          flex: 1
-        }}
+        style={[
+          styles.container,
+          {
+            borderColor: isSelected ? contrast : secondary,
+            backgroundColor: field,
+          }
+        ]}
       >
         {children}
       </View>
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    borderWidth: 2,
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 30,
+    flex: 1,
+  }
+})
 
 export default Card

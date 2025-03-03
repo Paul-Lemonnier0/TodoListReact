@@ -14,25 +14,28 @@ interface BasicTodoInfo {
   title: string
 }
 
+/**
+ * The bottom sheet to add a new todo item
+ */
 export const AddTodoBottomSheet: FC<AddTodoBottomSheetProps> = ({
   bottomSheetRef,
   addTodoItem
 }) => {
 
-  const {
-    control,
-    handleSubmit,
-  } = useForm<BasicTodoInfo>({
+  // Form management with react-hook-form (we just need a title field)
+  const { control, handleSubmit } = useForm<BasicTodoInfo>({
     defaultValues: {
       title: "",
     },
   });
 
+  // Submittion management
   const onSubmit = (data: BasicTodoInfo) => {
     addTodoItem(data.title)
     bottomSheetRef.current?.close()
   }
 
+  //UI Definition using the BaseBottomSheet component we defined earlier
   return(
     <BaseBottomSheet
       bottomSheetRef={bottomSheetRef}
@@ -43,6 +46,7 @@ export const AddTodoBottomSheet: FC<AddTodoBottomSheetProps> = ({
         action: handleSubmit(onSubmit)
       }}
     >
+      {/* View ~= div in React Native, it's the base container */}
       <View style={{flex: 1}}>
         <CustomTextInput
           control={control}
