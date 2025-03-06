@@ -9,6 +9,7 @@ import { AddTodoBottomSheet } from "@/components/bottomSheets/AddTodoBottomSheet
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { SettingsTodoBottomSheet } from "@/components/bottomSheets/SettingsTodoBottomSheet";
 import { BaseImpact } from "@/constants/Impacts";
+import ProgressBar from "@/components/chart/ProgressBar";
 
 export default function HomeScreen() {
 
@@ -78,6 +79,11 @@ const HomeScreenHeader: FC<HomeScreenHeaderProps> = ({
   handleOpenEditTodo
 }) => {
 
+  const {
+    getTodoListProgress
+  } = useTodoList()
+
+
   const dateString = new Date().toLocaleDateString('en-US', {
     year: "numeric",
     month: 'long',
@@ -87,19 +93,25 @@ const HomeScreenHeader: FC<HomeScreenHeaderProps> = ({
   // Get the platform name (iOS or Android)
   const platform = Platform.OS === 'ios' ? 'iOS' : 'Android'
 
+  const progress = getTodoListProgress()
+
   return(
-    <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-      <View>
-        <ThemedText type="title">todo.</ThemedText>
-        <ThemedText type="subtitle" gray>{dateString}</ThemedText>
-        <ThemedText type="defaultSemiBold">{platform}</ThemedText>
+    <View style={{gap: 10}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View>
+          <ThemedText type="title">todo.</ThemedText>
+          <ThemedText type="subtitle" gray>{dateString}</ThemedText>
+          <ThemedText type="defaultSemiBold">{platform}</ThemedText>
+        </View>
+
+        <BorderIconButton
+          onPress={handleOpenEditTodo ?? (() => {})}
+          iconName={"create-outline"}
+          disabled={handleOpenEditTodo === null}
+        />
       </View>
 
-      <BorderIconButton
-        onPress={handleOpenEditTodo ?? (() => {})}
-        iconName={"create-outline"}
-        disabled={handleOpenEditTodo === null}
-      />
+      <ProgressBar progress={progress / 100} showPercentage/>
     </View>
   )
 }

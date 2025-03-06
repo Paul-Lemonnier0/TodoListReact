@@ -13,6 +13,7 @@ interface TodoListContextType {
   toggleTodoItem: (id: string) => Promise<void>;
   updateTodoItemTitle: (id: string, title: string) => Promise<void>;
   getTodoByID: (id: string) => TodoItem | undefined;
+  getTodoListProgress: () => number;
 }
 
 const TodoListContext = createContext<TodoListContextType | undefined>(undefined);
@@ -126,6 +127,17 @@ export const TodoListProvider: React.FC<TodoListProviderProps> = ({ children }) 
     return todoList.find((item) => item.id === id)
   }
 
+  /**
+   * Calculates the progress of the todo list.
+   * @returns The progress of the todo list as a percentage
+   */
+  const getTodoListProgress = () => {
+    const totalItems = todoList.length
+    const doneItems = todoList.filter((item) => item.isDone).length
+
+    return Math.round((doneItems / totalItems) * 100)
+  }
+
   return (
     <TodoListContext.Provider
       value={{
@@ -134,7 +146,8 @@ export const TodoListProvider: React.FC<TodoListProviderProps> = ({ children }) 
         removeTodoItem,
         toggleTodoItem,
         updateTodoItemTitle,
-        getTodoByID
+        getTodoByID,
+        getTodoListProgress
       }}
     >
       {children}

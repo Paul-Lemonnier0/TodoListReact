@@ -30,7 +30,8 @@ export const BottomSheetFooterUtils: FC<BottomSheetFooterUtilsProps> = ({
 
   return(
 
-    <View style={{flexDirection: "row", gap: 10, paddingBottom: 10}}> { /* It's possible to define the style of the view using the inline notation or using a StyleSheet object */}
+    /* It's possible to define the style of the view using the inline notation or using a StyleSheet object */
+    <View style={{flexDirection: "row", gap: 10, paddingBottom: 10}}>
       {
         // Renders the red button if it is defined
         redButton && (
